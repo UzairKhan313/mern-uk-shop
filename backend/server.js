@@ -1,23 +1,25 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import products from './data/products.js'
+
+import connectDB from './config/DB.js'
+
+// importing Routes
+import productRoutes from './routes/productRoutes.js'
+
+import { notFound, errorHandler } from './middleware/error.js'
 
 dotenv.config()
 
 const port = process.env.PORT || 8000
 
+connectDB() // Connection to Database.
 const app = express()
 
-app.get('/api/v1/products', (req, res, next) => {
-  res.json(products)
-})
+app.use('/api/v1/products', productRoutes)
 
-app.get('/api/v1/product/:id', (req, res, next) => {
-  const id = req.params.id
-  const product = products.find((product) => product._id === id)
-  res.json(product)
-})
+app.use(notFound)
+app.use(errorHandler)
 
 app.listen(port, () => {
-  console.log(`Server is Running on port https://localhost/${port}`)
+  console.log(`Server is Running on port https://localhost:${port}`)
 })
