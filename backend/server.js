@@ -1,10 +1,12 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import cookieParser from 'cookie-parser'
 
 import connectDB from './config/DB.js'
 
 // importing Routes
 import productRoutes from './routes/productRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 
 import { notFound, errorHandler } from './middleware/error.js'
 
@@ -15,11 +17,22 @@ const port = process.env.PORT || 8000
 connectDB() // Connection to Database.
 const app = express()
 
-app.use('/api/v1/products', productRoutes)
+// Body parser middleware.
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
+//Cookie parser middleware.
+app.use(cookieParser())
+
+// controllers Routes
+app.use('/api/v1/products', productRoutes)
+app.use('/api/v1/users', userRoutes)
+
+// Error handler routes
 app.use(notFound)
 app.use(errorHandler)
 
+// Starting the Server.
 app.listen(port, () => {
   console.log(`Server is Running on port https://localhost:${port}`)
 })
