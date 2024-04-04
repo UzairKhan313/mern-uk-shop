@@ -1,14 +1,37 @@
 import React from 'react'
 import { LinkContainer } from 'react-router-bootstrap'
-import { Navbar, Nav, Container, Badge } from 'react-bootstrap'
+import { Navbar, Nav, Container, Badge, NavDropdown } from 'react-bootstrap'
 import { FaShoppingCart, FaUser } from 'react-icons/fa'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+
+import { useLogoutMutation } from '../slices/userApiSlice'
+import { logout } from '../slices/authSllice'
 
 const Header = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   // use Selectio take a funtion and we destruct any thing from that function
   // cart is comming from our store that we define it in there.
   const { cartItems } = useSelector((state) => state.cart)
-  console.log(cartItems)
+
+  const [logoutApiCall] = useLogoutMutation()
+
+  // Getting User info from the state
+  const { userInfo } = useSelector((state) => state.auth)
+
+  const logoutHandler = async () => {
+    try {
+      await logoutApiCall().unwrap()
+      dispatch(logout())
+      navigate('/login')
+    } catch (error) {
+      toast.error(error?.data?.message || error.error)
+    }
+  }
+
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect>
@@ -32,12 +55,23 @@ const Header = () => {
                   )}
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/login">
-                <Nav.Link>
-                  <FaUser />
-                  <span style={{ marginLeft: '4px' }}>Sign In</span>
-                </Nav.Link>
-              </LinkContainer>
+              {userInfo ? (
+                <NavDropdown title={userInfo.name} id="username">
+                  <LinkContainer to="profile">
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Item onClick={logoutHandler}>
+                    logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <LinkContainer to="/login">
+                  <Nav.Link>
+                    <FaUser />
+                    <span style={{ marginLeft: '4px' }}>Sign In</span>
+                  </Nav.Link>
+                </LinkContainer>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
