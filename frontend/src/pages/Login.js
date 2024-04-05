@@ -38,7 +38,7 @@ const Login = () => {
       const response = await login({ email, password }).unwrap()
       // storing the user info in local storage through the setCredientials slice
       dispatch(setCredientials({ ...response }))
-      navigate(redirect)
+      navigate('/')
     } catch (error) {
       toast.error(error?.data?.message || error.error)
     }

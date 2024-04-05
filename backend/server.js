@@ -7,6 +7,7 @@ import connectDB from './config/DB.js'
 // importing Routes
 import productRoutes from './routes/productRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import orderRoutes from './routes/orderRoutes.js'
 
 import { notFound, errorHandler } from './middleware/error.js'
 
@@ -27,6 +28,7 @@ app.use(cookieParser())
 // controllers Routes
 app.use('/api/v1/products', productRoutes)
 app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/orders', orderRoutes)
 
 // Error handler routes
 app.use(notFound)

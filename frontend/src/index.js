@@ -17,12 +17,17 @@ import store from './store.js'
 
 import App from './App'
 
+import PrivateRoutes from './components/PrivateRoutes.js'
+
 // Pages
 import Home from './pages/Home'
 import ProductDetail from './pages/ProductDetails'
 import Cart from './pages/Cart.js'
 import Login from './pages/Login.js'
 import Signup from './pages/Signup.js'
+import Shipping from './pages/Shipping.js'
+import Payment from './pages/Payment.js'
+import PlaceOrder from './pages/PlaceOrder.js'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +37,11 @@ const router = createBrowserRouter(
       <Route path="/cart" element={<Cart />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Signup />} />
+      <Route path="" element={<PrivateRoutes />}>
+        <Route path="/shipping" element={<Shipping />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/placeorder" element={<PlaceOrder />} />
+      </Route>
     </Route>
   )
 )
