@@ -18,7 +18,7 @@ router
   .get(adminRoutes, getAllOrders)
 
 router.route('/mine').get(protectRoutes, getMyOrders)
-router.route('/:id').get(protectRoutes, adminRoutes, getOrderById)
+router.route('/:id').get(protectRoutes, getOrderById)
 router.route('/:id/pay').put(protectRoutes, updateOrderToPaid)
 router
   .route('/:id/delievered')

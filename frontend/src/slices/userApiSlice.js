@@ -16,9 +16,20 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     logout: builder.mutation({
       query: () => ({ url: `${USERS_URL}/logout`, method: 'POST' }),
     }),
+    profile: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/profile`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
   }),
 })
 
 // The convention is to use preffix word "use" and postfix write a "query" if it is query or write mutation it is mutation.
-export const { useLoginMutation, useLogoutMutation, useRegistereMutation } =
-  usersApiSlice
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useRegistereMutation,
+  useProfileMutation,
+} = usersApiSlice

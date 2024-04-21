@@ -21,7 +21,7 @@ router.post('/login', authUser)
 router
   .route('/profile')
   .get(protectRoutes, getUserProfile)
-  .put(protectRoutes, updateUserProfle)
+  .post(protectRoutes, updateUserProfle)
 
 // =============> ADMIN <====================
 router
