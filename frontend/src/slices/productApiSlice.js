@@ -7,6 +7,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       query: () => ({
         url: PRODUCTS_URL,
       }),
+      providesTags: ['Products'],
       keepUnusedDataFor: 5,
     }),
     getProductDetails: builder.query({
@@ -15,9 +16,30 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
+    createProduct: builder.mutation({
+      query: () => ({
+        url: `${PRODUCTS_URL}/new`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Product'], // it stopping it from catching. So we have fresh data and we don't have to reload the page.
+    }),
+    updateProduct: builder.mutation({
+      query: (data) => {
+        return {
+          url: `${PRODUCTS_URL}/${data.productId}`,
+          method: 'PUT',
+          body: data,
+        }
+      },
+      invalidatesTags: ['Products'],
+    }),
   }),
 })
 
 // The convention is to use preffix word "use" and postfix write a "query" if it is query or write mutation it is mutation.
-export const { useGetProductsQuery, useGetProductDetailsQuery } =
-  productsApiSlice
+export const {
+  useGetProductsQuery,
+  useGetProductDetailsQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+} = productsApiSlice

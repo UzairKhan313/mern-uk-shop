@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { Row, Col, ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
+import { Row, Col, ListGroup, Image, Button, Card } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 
@@ -10,6 +10,7 @@ import {
   useGetOrderDetailsQuery,
   useGetPayPalClientIdQuery,
   usePayOrderMutation,
+  useDelieverOrderMutation,
 } from '../slices/orderApiSlice'
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js'
 
@@ -22,19 +23,22 @@ const Order = () => {
     error,
   } = useGetOrderDetailsQuery(orderId)
 
-  const [payOrder, { isLoading: loadingPayPal }] = usePayOrderMutation()
+  const [payOrder] = usePayOrderMutation()
+
+  const [deliverOrder, { isLoading: loadingDeliever }] =
+    useDelieverOrderMutation()
 
   //FROM PAYPAL SCRIPT.
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer()
 
   const {
     data: paypal,
-    isLoading: ladingPayPal,
+    isLoading: loadingPayPal,
     error: errorPaypal,
   } = useGetPayPalClientIdQuery()
 
   // GETTING USERINFO FROM THE STATE.
-  const userInfo = useSelector((state) => state.auth)
+  const { userInfo } = useSelector((state) => state.auth)
 
   useEffect(() => {
     if (paypal) {
@@ -56,7 +60,7 @@ const Order = () => {
         }
       }
     }
-  }, [order, paypal, ladingPayPal, errorPaypal, paypalDispatch])
+  }, [order, paypal, loadingPayPal, errorPaypal, paypalDispatch])
 
   const onApprove = (data, actions) => {
     return actions.order.capture().then(async function (details) {
@@ -95,6 +99,16 @@ const Order = () => {
       })
   }
 
+  const deliveredOrderHandler = async () => {
+    try {
+      await deliverOrder(orderId)
+      refetch()
+      toast.success('Order Delivered Successfully')
+    } catch (error) {
+      toast.error(error?.data?.message || error.error)
+    }
+  }
+
   return isLoading ? (
     <Loader />
   ) : error ? (
@@ -121,9 +135,9 @@ const Order = () => {
                 {order.shippingAddress.postalCode},
                 {order.shippingAddress.country}
               </p>
-              {order.isDelievered ? (
+              {order.isDelivered ? (
                 <Message variant="success">
-                  Delievered on {order.delieveredAt}
+                  Delievered on {order.deliveredAt}
                 </Message>
               ) : (
                 <Message variant="danger">Not Delievered</Message>
@@ -212,6 +226,22 @@ const Order = () => {
                 </ListGroup.Item>
               )}
               {/* MARK AS DELIEVERED */}
+              {loadingDeliever && <Loader />}
+
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelievered && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliveredOrderHandler}
+                    >
+                      Mark is delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>

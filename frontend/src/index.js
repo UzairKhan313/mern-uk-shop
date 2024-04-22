@@ -12,14 +12,15 @@ import './assets/styles/index.css'
 
 import reportWebVitals from './reportWebVitals'
 //PayPal
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js'
+import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 
 import { Provider } from 'react-redux'
 import store from './store.js'
-
 import App from './App'
 
+// Utils for Route Protection.
 import PrivateRoutes from './components/PrivateRoutes.js'
+import AdminRoutes from './components/AdmingRoutes.js'
 
 // Pages
 import Home from './pages/Home'
@@ -32,6 +33,9 @@ import Payment from './pages/Payment.js'
 import PlaceOrder from './pages/PlaceOrder.js'
 import Order from './pages/Order.js'
 import Profile from './pages/Profile.js'
+import OrderList from './pages/admin/OrderList.js'
+import ProductList from './pages/admin/ProductList.js'
+import EditProduct from './pages/admin/EditProduct.js'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +51,11 @@ const router = createBrowserRouter(
         <Route path="/placeorder" element={<PlaceOrder />} />
         <Route path="/order/:id" element={<Order />} />
         <Route path="/profile" element={<Profile />} />
+      </Route>
+      <Route path="" element={<AdminRoutes />}>
+        <Route path="/admin/orderlist" element={<OrderList />} />
+        <Route path="/admin/productlist" element={<ProductList />} />
+        <Route path="/admin/product/:id/edit" element={<EditProduct />} />
       </Route>
     </Route>
   )

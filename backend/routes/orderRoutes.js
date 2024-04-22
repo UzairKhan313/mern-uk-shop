@@ -15,13 +15,13 @@ const router = express.Router()
 router
   .route('/')
   .post(protectRoutes, addOrderItems)
-  .get(adminRoutes, getAllOrders)
+  .get(protectRoutes, adminRoutes, getAllOrders)
 
 router.route('/mine').get(protectRoutes, getMyOrders)
 router.route('/:id').get(protectRoutes, getOrderById)
 router.route('/:id/pay').put(protectRoutes, updateOrderToPaid)
 router
-  .route('/:id/delievered')
+  .route('/:id/deliver')
   .put(protectRoutes, adminRoutes, updateOrderToDelievered)
 
 export default router
