@@ -9,13 +9,21 @@ import Loader from '../../components/Loader'
 
 import {
   useCreateProductMutation,
+  useDeleteProductMutation,
   useGetProductsQuery,
 } from '../../slices/productApiSlice'
 
 const ProductList = () => {
+  // mutation for getting product details.
   const { data: products, isLoading, error, refetch } = useGetProductsQuery()
+
+  // mutationn for updating product
   const [createProduct, { isLoading: createProductLoading }] =
     useCreateProductMutation()
+
+  // mutation for deleting product
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation()
 
   const createProductHandler = async () => {
     if (window.confirm('Are your sure you want to create new product')) {
@@ -29,8 +37,17 @@ const ProductList = () => {
     }
   }
 
-  const deleteProductHanlder = (id) => {
-    console.log(id)
+  // Delete product handler.
+  const deleteProductHanlder = async (id) => {
+    if (window.confirm('Are you sure do you want to delete the product.')) {
+      try {
+        await deleteProduct(id)
+        refetch()
+        toast.success('Product deleted successfully')
+      } catch (error) {
+        toast.error(error?.data?.message || error.error)
+      }
+    }
   }
 
   return (
@@ -46,6 +63,7 @@ const ProductList = () => {
         </Col>
       </Row>
       {createProductLoading && <Loader />}
+      {loadingDelete && <Loader />}
       {isLoading ? (
         <Loader />
       ) : error ? (

@@ -15,7 +15,7 @@ import { protectRoutes, adminRoutes } from '../middleware/auth.js'
 
 const router = express.Router()
 
-router.route('/').post(registerUser).get(adminRoutes, getAllUser)
+router.route('/').post(registerUser).get(protectRoutes, adminRoutes, getAllUser)
 router.post('/logout', logoutUser)
 router.post('/login', authUser)
 router
@@ -26,8 +26,8 @@ router
 // =============> ADMIN <====================
 router
   .route('/:id')
-  .delete(adminRoutes, deleteUser)
-  .get(adminRoutes, getUserById)
-  .put(adminRoutes, updateUser)
+  .delete(protectRoutes, adminRoutes, deleteUser)
+  .get(protectRoutes, adminRoutes, getUserById)
+  .put(protectRoutes, adminRoutes, updateUser)
 
 export default router

@@ -36,6 +36,8 @@ import Profile from './pages/Profile.js'
 import OrderList from './pages/admin/OrderList.js'
 import ProductList from './pages/admin/ProductList.js'
 import EditProduct from './pages/admin/EditProduct.js'
+import UserList from './pages/admin/UserList.js'
+import EditUser from './pages/admin/EditUser.js'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -56,6 +58,8 @@ const router = createBrowserRouter(
         <Route path="/admin/orderlist" element={<OrderList />} />
         <Route path="/admin/productlist" element={<ProductList />} />
         <Route path="/admin/product/:id/edit" element={<EditProduct />} />
+        <Route path="/admin/userlist" element={<UserList />} />
+        <Route path="/admin/user/:id/edit" element={<EditUser />} />
       </Route>
     </Route>
   )

@@ -86,7 +86,9 @@ const EditProduct = () => {
 
   return (
     <>
-      <Link to="/admin/productlist">Go Back</Link>
+      <Link to="/admin/productlist" className="btn btn-light my-3">
+        Go Back
+      </Link>
       <FormContainer>
         <h1>Edit Product</h1>
         {updateLoading && <Loader />}
