@@ -1,17 +1,28 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
+import { Link, useParams } from 'react-router-dom'
 
 import Product from '../components/Product'
 import Loader from '../components/Loader'
 import Message from '../components/Message'
 import { useGetProductsQuery } from '../slices/productApiSlice'
+import Paginate from '../components/Paginate'
 
 const Home = () => {
+  const { pageNumber, keyword } = useParams()
   // "useGetProductsQuery" return the following.
-  const { data: products, isLoading, error } = useGetProductsQuery()
+  const { data, isLoading, error } = useGetProductsQuery({
+    pageNumber,
+    keyword,
+  })
 
   return (
     <>
+      {keyword && (
+        <Link to="/" className="btn btn-light mb-4">
+          Go Back
+        </Link>
+      )}
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -22,7 +33,7 @@ const Home = () => {
         <>
           <h1>Latest Product</h1>
           <Row>
-            {products.map((product) => {
+            {data.products.map((product) => {
               return (
                 <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
                   <Product product={product} />
@@ -30,6 +41,11 @@ const Home = () => {
               )
             })}
           </Row>
+          <Paginate
+            pages={data.pages}
+            currentPage={data.page}
+            keyword={keyword ? keyword : ''}
+          />
         </>
       )}
     </>

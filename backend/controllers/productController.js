@@ -5,8 +5,21 @@ import Product from '../models/product.js'
 // @route GET api/v1/products
 // @access Public
 export const getProducts = asyncHandler(async (req, res, next) => {
-  const products = await Product.find({}) // empty object to take all the document in db.
-  res.json(products)
+  const pageSize = 8
+  const page = Number(req.query.pageNumber || 1)
+  // for Searching item with name.
+  const searchTerm = req.query.keyword
+    ? { name: { $regex: req.query.keyword, $options: 'i' } }
+    : {}
+
+  // limit the count with search term
+  const count = await Product.countDocuments({ ...searchTerm })
+  // also limit the product array with search terms.
+  const products = await Product.find({ ...searchTerm }) // empty object to take all the document in db.
+    .limit(pageSize)
+    .skip(pageSize * (page - 1))
+
+  res.json({ products, page, pages: Math.ceil(count / pageSize) })
 })
 
 // @desc fetch  product

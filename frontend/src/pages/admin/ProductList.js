@@ -3,9 +3,11 @@ import { Table, Button, Row, Col } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import { FaEdit, FaTrash } from 'react-icons/fa'
 import { toast } from 'react-toastify'
+import { useParams } from 'react-router-dom'
 
 import Message from '../../components/Message'
 import Loader from '../../components/Loader'
+import Paginate from '../../components/Paginate'
 
 import {
   useCreateProductMutation,
@@ -14,8 +16,13 @@ import {
 } from '../../slices/productApiSlice'
 
 const ProductList = () => {
+  const { pageNumber } = useParams()
   // mutation for getting product details.
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery()
+  const { data, isLoading, error, refetch } = useGetProductsQuery({
+    pageNumber,
+  })
+
+  const { page, pages, products } = data
 
   // mutationn for updating product
   const [createProduct, { isLoading: createProductLoading }] =
@@ -114,6 +121,7 @@ const ProductList = () => {
           </tbody>
         </Table>
       )}
+      <Paginate pages={pages} currentPage={page} isAdmin={true} />
     </>
   )
 }
