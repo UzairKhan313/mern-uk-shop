@@ -22,8 +22,6 @@ const ProductList = () => {
     pageNumber,
   })
 
-  const { page, pages, products } = data
-
   // mutationn for updating product
   const [createProduct, { isLoading: createProductLoading }] =
     useCreateProductMutation()
@@ -90,7 +88,7 @@ const ProductList = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
+            {data.products.map((product) => (
               <tr key={product._id}>
                 <td>{product._id}</td>
                 <td>{product.name}</td>
@@ -121,7 +119,9 @@ const ProductList = () => {
           </tbody>
         </Table>
       )}
-      <Paginate pages={pages} currentPage={page} isAdmin={true} />
+      {data && (
+        <Paginate pages={data.pages} currentPage={data.page} isAdmin={true} />
+      )}
     </>
   )
 }

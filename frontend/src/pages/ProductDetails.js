@@ -13,6 +13,7 @@ import {
   useCreateProductReviewMutation,
 } from '../slices/productApiSlice'
 import { addToCart } from '../slices/cartSlice'
+import Meta from '../components/Meta'
 
 const ProductDetail = () => {
   const { id: productId } = useParams()
@@ -52,7 +53,6 @@ const ProductDetail = () => {
       setRating(0)
       setComment('')
     } catch (error) {
-      console.log(error)
       toast.error(error?.data?.message || error.error)
     }
   }
@@ -70,6 +70,8 @@ const ProductDetail = () => {
         </Message>
       ) : (
         <>
+          <Meta title={product.name} />
+
           <Row>
             <Col md={5}>
               <Image src={product.image} alt={product.name} fluid />
