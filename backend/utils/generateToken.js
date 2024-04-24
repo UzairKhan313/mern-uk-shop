@@ -11,8 +11,8 @@ const generateToken = (res, userID) => {
     httpOnly: true,
     secure: process.env.NODE_ENV !== 'development',
     sameSite: 'strict',
+    // expires: new Date(Date.now() + 10000),
     expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-    // maxAge: 20 * 1000, //3 * 24 * 60 * 60 * 1000, // this is in millisecond 3 day * 24 hr in each day and so on
   })
 }
 export default generateToken

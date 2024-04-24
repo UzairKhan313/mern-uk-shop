@@ -135,3 +135,11 @@ export const deleteProduct = asyncHandler(async (req, res, next) => {
     throw new Error('Product deletion faild. Product not found.')
   }
 })
+
+// @desc  get top rated product
+// @route post api/v1/product/top
+// @access public
+export const getTopProducts = asyncHandler(async (req, res, next) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3)
+  res.status(200).json(products)
+})

@@ -11,12 +11,6 @@ const errorHandler = (error, req, res, next) => {
 
   let { message } = error || 'Something went wrong. Please try again letter'
 
-  // check for mongoose bad object id.
-  if (error.name === 'CastError' && error.kind === 'ObjectId') {
-    message = 'Resource not found.'
-    statusCode = 404
-  }
-
   res.status(statusCode).json({
     message: message,
     stack: process.env.NODE_ENV === 'production' ? '' : error.stack,
